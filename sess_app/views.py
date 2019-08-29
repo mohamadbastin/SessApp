@@ -119,7 +119,8 @@ class CourseView(ListAPIView):
 
     def get_queryset(self):
         cs_id = self.kwargs.get('course_id')
-
+        if cs_id == '__all__':
+            return Course.objects.all()
         return Course.objects.filter(pk=cs_id)
 
 
