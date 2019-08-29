@@ -123,6 +123,15 @@ class CourseView(ListAPIView):
         return Course.objects.filter(pk=cs_id)
 
 
+class DepartmentCourseView(ListAPIView):
+    serializer_class = CourseSerializer
+
+    def get_queryset(self):
+        dp_id = self.kwargs.get('dp_id')
+        dp = Department.objects.get(pk=dp_id)
+        return Course.objects.filter(department=dp)
+
+
 class NoteCreateView(CreateAPIView):
     serializer_class = NoteSerializer
 

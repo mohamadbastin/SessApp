@@ -24,6 +24,7 @@ urlpatterns = [
     path('api-token-auth/', views.obtain_auth_token),
     path('login/', SignupView.as_view()),
     path('department/<department_id>', DepartmentView.as_view()),
+    path('departmentcourse/<dp_id>', DepartmentCourseView.as_view()),
     path('usercourse/<uc_id>', UserCourseListView.as_view()),
     path('create-db/', CreateDatabaseView.as_view()),
     path('profile/<pr_id>', ProfileView.as_view()),
