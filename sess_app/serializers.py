@@ -8,7 +8,7 @@ from .models import *
 class UserGetOrCreate(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ['phone', 'department']
+        fields = ['phone',]
 
 
 class CourseSerializer1(serializers.ModelSerializer):

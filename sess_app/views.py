@@ -34,7 +34,7 @@ class SignupView(CreateAPIView):
             return Response({'errors': the_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
         phone_number = request.data.get('phone', None)
-        department = request.data.get('department', None)
+        # department = request.data.get('department', None)
 
         try:
             profile = Profile.objects.get(phone=phone_number)
@@ -42,9 +42,9 @@ class SignupView(CreateAPIView):
         except Profile.DoesNotExist:
             user = User.objects.create(username=phone_number)
             profile = Profile.objects.create(user=user, phone=phone_number)
-            if department != None:
-                department = Department.objects.get(pk=department)
-                profile.department = department
+            # if department != None:
+            #     department = Department.objects.get(pk=department)
+            #     profile.department = department
             profile.save()
 
         password = randint(1000, 9999)
@@ -56,6 +56,37 @@ class SignupView(CreateAPIView):
         operator = Operator.objects.first()
         operator.send_message(message)
         return Response({"password": 'sent'})
+
+
+class UpdateProfileView(CreateAPIView):
+    serializer_class = ProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        usr = self.request.user
+        user = Profile.objects.get(user=usr)
+
+        user.department = self.request.data.get('department', None)
+        user.name = self.request.data.get('name', None)
+        user.picture = self.request.data.get('picture', None)
+        # user.department = self.request.data.get('department', None)
+        user.save()
+
+        return Response({"status": "done"})
+
+
+class DeleteProfileView(CreateAPIView):
+    serializer_class = ProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        usr = self.request.user
+        user = Profile.objects.get(user=usr)
+
+        user.delete()
+        usr.delete()
+
+        return Response({"status": "done"})
 
 
 class DepartmentUpdateView(UpdateAPIView):
@@ -168,4 +199,37 @@ class CreateDatabaseView(CreateAPIView):
 
 class ProfileView(ListAPIView):
     serializer_class = ProfileSerializer
-    queryset = Profile.objects.all()
+
+    def get_queryset(self):
+        pr_id = self.kwargs.get('pr_id')
+        if pr_id == '__all__':
+            return Profile.objects.all()
+        elif pr_id == None:
+            usr = self.request.user
+            user = Profile.objects.filter(user=usr)
+            return user
+        else:
+            return Profile.objects.filter(pk=pr_id)
+
+
+class NoteUpdateView(CreateAPIView):
+    serializer_class = NoteSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        nt_id = self.kwargs.get('nt_id')
+        a = Note.objects.get(pk=nt_id)
+        a.text = self.request.data.get('text', None)
+        a.save()
+        return Response({"status": "done"})
+
+
+class NoteDeleteView(CreateAPIView):
+    serializer_class = NoteSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        nt_id = self.kwargs.get('nt_id')
+        a = Note.objects.get(pk=nt_id)
+        a.delete()
+        return Response({"status": "done"})

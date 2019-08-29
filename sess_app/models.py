@@ -8,7 +8,7 @@ class Profile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     department = models.ForeignKey('Department', on_delete=models.CASCADE, null=True, blank=True)
     phone = models.CharField(max_length=20)
-    name = models.CharField(max_length=1000)
+    name = models.CharField(max_length=1000,)
     picture = models.ImageField(null=True, blank=True)
 
     courses = models.ManyToManyField('Course', through='UserCourse')
