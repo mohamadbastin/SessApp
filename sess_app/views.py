@@ -174,7 +174,7 @@ class CreateDatabaseView(CreateAPIView):
             a = json.load(f)
             for dep in a:
                 try:
-                    last_dp = Department.objects.get(dp_id=dep['id'])
+                    last_dp = Department.objects.get(dep_id=dep['id'])
                     last_dp.title = dep['title']
                     for cs in dep['courses']:
                         try:
@@ -190,11 +190,13 @@ class CreateDatabaseView(CreateAPIView):
                                                   gender=cs['gender'], final_time=cs['final_date'],
                                                   time_room=cs['time_room'], department=last_dp, cs_id=cs['ident'])
                 except Department.DoesNotExist:
-                    last_dp = Department.objects.create(title=dep['title'], dp_id=dep['id'])
+                    last_dp = Department.objects.create(title=dep['title'], dep_id=dep['id'])
                     for cs in dep['courses']:
                         Course.objects.create(title=cs['title'], group=cs['group'], teacher=cs['teacher'],
                                               gender=cs['gender'], final_time=cs['final_date'],
                                               time_room=cs['time_room'], department=last_dp, cs_id=cs['ident'])
+
+            return Response({"status": "done"})
 
 
 class ProfileView(ListAPIView):
