@@ -73,10 +73,11 @@ class LoginView(CreateAPIView):
         # department = request.data.get('department', None)
 
         try:
-            profile = Profile.objects.get(phone=phone_number)
+            userr = User.objects.get(username=phone_number)
+            profile = Profile.objects.get(user=userr)
             user = profile.user
             # return Response({"status": "has account"})
-        except Profile.DoesNotExist:
+        except User.DoesNotExist:
             # user = User.objects.create(username=phone_number)
             # profile = Profile.objects.create(user=user, phone=phone_number)
             # # if department != None:
