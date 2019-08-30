@@ -144,6 +144,7 @@ class NoteCreateView(CreateAPIView):
 
 
 class UserCourseListView(ListAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = UserCourseSerializer
 
     def get_queryset(self):
@@ -263,3 +264,42 @@ class NoteDeleteView(CreateAPIView):
         a = Note.objects.get(pk=nt_id)
         a.delete()
         return Response({"status": "done"})
+
+
+class UserCourseCreateView(CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserCourseSerializer
+
+    def post(self, request, *args, **kwargs):
+        usr = self.request.user
+        user = Profile.objects.get(user=usr)
+
+        cs_id = self.kwargs.get('cs_id', None)
+
+        try:
+            cs = Course.objects.get(pk=cs_id)
+            a = UserCourse.objects.create(user_profile=user, course=cs)
+            return Response({"status": "done", "id": a.pk})
+
+        except Course.DoesNotExist:
+            return Response({"status": "course id not correct"})
+
+
+class UserCourseDeleteView(CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserCourseSerializer
+
+    def post(self, request, *args, **kwargs):
+        usr = self.request.user
+        user = Profile.objects.get(user=usr)
+
+        cs_id = self.kwargs.get('cs_id', None)
+
+        try:
+            cs = Course.objects.get(pk=cs_id)
+            a = UserCourse.objects.get(user_profile=user, course=cs)
+            a.delete()
+            return Response({"status": "done"})
+
+        except Course.DoesNotExist:
+            return Response({"status": "course id not correct"})

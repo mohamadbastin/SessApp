@@ -28,6 +28,8 @@ urlpatterns = [
     path('department/<department_id>', DepartmentView.as_view()),
     path('departmentcourse/<dp_id>', DepartmentCourseView.as_view()),
     path('usercourse/<uc_id>', UserCourseListView.as_view()),
+    path('usercourse/create/<cs_id>', UserCourseCreateView.as_view()),
+    path('usercourse/delete/<cs_id>', UserCourseDeleteView.as_view()),
     path('create-db/', CreateDatabaseView.as_view()),
     path('clean-db/', CleanDatabaseView.as_view()),
     path('profile/<pr_id>', ProfileView.as_view()),
