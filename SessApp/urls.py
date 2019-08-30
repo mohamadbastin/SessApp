@@ -14,8 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.conf.urls.static import static
 from django.urls import path
 from rest_framework.authtoken import views
+
+from SessApp import settings
 from sess_app.views import *
 
 
@@ -35,3 +38,9 @@ urlpatterns = [
     path('note/update/<nt_id>', NoteUpdateView.as_view()),
     path('note/delete/', NoteDeleteView.as_view()),
 ]
+
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

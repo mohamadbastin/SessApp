@@ -65,8 +65,8 @@ class UpdateProfileView(CreateAPIView):
     def post(self, request, *args, **kwargs):
         usr = self.request.user
         user = Profile.objects.get(user=usr)
-
-        user.department = self.request.data.get('department', None)
+        dep = Department.objects.get(pk=self.request.data.get('department', None))
+        user.department = dep
         user.name = self.request.data.get('name', None)
         user.picture = self.request.data.get('picture', None)
         # user.department = self.request.data.get('department', None)
