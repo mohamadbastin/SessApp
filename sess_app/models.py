@@ -73,6 +73,7 @@ class UserCourse(models.Model):
 class Note(models.Model):
     text = models.CharField(max_length=2000)
     user_course = models.ForeignKey(UserCourse, related_name="notes", on_delete=models.CASCADE)
+    date = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return self.text[:10] + ' / ' + str(self.user_course)

@@ -173,12 +173,18 @@ class DepartmentCourseView(ListAPIView):
 
 class NoteCreateView(CreateAPIView):
     serializer_class = NoteSerializer
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        uc = UserCourse.objects.get(pk=request.data.get('user_course', None))
-        Note.objects.create(text=request.data.get('text', None), user_course=uc)
+        usr = self.request.user
+        user = Profile.objects.get(user=usr)
+        try:
+            uc = UserCourse.objects.get(pk=kwargs.get('uc_id', None), user_profile=user)
+            Note.objects.create(text=request.data.get('text', ' '), user_course=uc, date=request.data.get('date', ' '))
 
-        return Response({"status": "done"})
+            return Response({"status": "done"})
+        except UserCourse.DoesNotExist:
+            return Response({"status": "uc not correct"})
 
 
 class UserCourseListView(ListAPIView):
@@ -286,11 +292,17 @@ class NoteUpdateView(CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        nt_id = self.kwargs.get('nt_id')
-        a = Note.objects.get(pk=nt_id)
-        a.text = self.request.data.get('text', None)
-        a.save()
-        return Response({"status": "done"})
+        usr = self.request.user
+        user = Profile.objects.get(user=usr)
+        try:
+            nt_id = self.kwargs.get('nt_id')
+            a = Note.objects.get(pk=nt_id)
+            a.text = self.request.data.get('text', ' ')
+            a.date = self.request.data.get('date', ' ')
+            a.save()
+            return Response({"status": "done"})
+        except Note.DoesNotExist:
+            return Response({"status": "note not correct"})
 
 
 class NoteDeleteView(CreateAPIView):
@@ -298,10 +310,13 @@ class NoteDeleteView(CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        nt_id = self.kwargs.get('nt_id')
-        a = Note.objects.get(pk=nt_id)
-        a.delete()
-        return Response({"status": "done"})
+        try:
+            nt_id = self.kwargs.get('nt_id')
+            a = Note.objects.get(pk=nt_id)
+            a.delete()
+            return Response({"status": "done"})
+        except Note.DoesNotExist:
+            return Response({"status": "note not correct"})
 
 
 class UserCourseCreateView(CreateAPIView):

@@ -37,9 +37,9 @@ urlpatterns = [
     path('course/<course_id>', CourseView.as_view()),
     path('profile/update/', UpdateProfileView.as_view()),
     path('profile/delete/', DeleteProfileView.as_view()),
-    path('note/create/', NoteCreateView.as_view()),
+    path('note/create/<uc_id>', NoteCreateView.as_view()),
     path('note/update/<nt_id>', NoteUpdateView.as_view()),
-    path('note/delete/', NoteDeleteView.as_view()),
+    path('note/delete/<nt_id>', NoteDeleteView.as_view()),
 ]
 
 if settings.DEBUG:

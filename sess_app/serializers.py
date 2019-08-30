@@ -8,7 +8,7 @@ from .models import *
 class UserGetOrCreate(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ['phone',]
+        fields = ['phone', ]
 
 
 class CourseSerializer1(serializers.ModelSerializer):
@@ -60,7 +60,7 @@ class DepartmentSerializer(serializers.ModelSerializer):
 class NoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Note
-        fields = ['text', 'user_course']
+        fields = ['text', 'user_course', 'date']
 
 
 class ExamDateSerializer(serializers.ModelSerializer):
