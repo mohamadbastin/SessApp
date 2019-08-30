@@ -37,9 +37,11 @@ class SignupView(CreateAPIView):
         # department = request.data.get('department', None)
 
         try:
-            profile = Profile.objects.get(phone=phone_number)
-            user = profile.user
-        except Profile.DoesNotExist:
+            userr = User.objects.get(username=phone_number)
+            profile = Profile.objects.get(user=userr)
+            return Response({"status": "has account"})
+
+        except (Profile.DoesNotExist, User.DoesNotExist):
             user = User.objects.create(username=phone_number)
             profile = Profile.objects.create(user=user, phone=phone_number)
             # if department != None:
@@ -128,16 +130,18 @@ class DeleteProfileView(CreateAPIView):
         return Response({"status": "done"})
 
 
-class DepartmentUpdateView(UpdateAPIView):
-    serializer_class = ProfileSerializer
-
-    def put(self, request, *args, **kwargs):
-        usr = self.request.user
-        user = Profile.objects.get(user=usr)
-        dep = request.data.get('department', None)
-
-        user.department = dep
-        user.save()
+# class DepartmentUpdateView(CreateAPIView):
+#     serializer_class = ProfileSerializer
+#     permission_classes = [IsAuthenticated]
+#
+#     def post(self, request, *args, **kwargs):
+#         usr = self.request.user
+#         user = Profile.objects.get(user=usr)
+#
+#         dep = request.data.get('department', None)
+#
+#         user.department = dep
+#         user.save()
 
 
 class DepartmentView(ListAPIView):
@@ -155,6 +159,7 @@ class DepartmentView(ListAPIView):
 
 class CourseView(ListAPIView):
     serializer_class = CourseSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         cs_id = self.kwargs.get('course_id')
@@ -165,6 +170,7 @@ class CourseView(ListAPIView):
 
 class DepartmentCourseView(ListAPIView):
     serializer_class = CourseSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         dp_id = self.kwargs.get('dp_id')
@@ -202,18 +208,6 @@ class UserCourseListView(ListAPIView):
         # print(self.kwargs)
         # print (dp_id)
         return UserCourse.objects.filter(pk=uc_id, user_profile=user)
-
-
-class ExamDateCreateView(CreateAPIView):
-    serializer_class = ExamDateSerializer
-
-    def post(self, request, *args, **kwargs):
-        uc = UserCourse.objects.get(pk=request.data.get('user_course', None))
-        ExamDate.objects.create(title=request.data.get('title', None),
-                                date=request.data.get('date', None),
-                                user_course=uc,
-                                grade=request.data.get('grade', None))
-        return Response({"status": "done"})
 
 
 class CreateDatabaseView(CreateAPIView):
@@ -275,17 +269,24 @@ class CleanDatabaseView(CreateAPIView):
 
 class ProfileView(ListAPIView):
     serializer_class = ProfileSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        pr_id = self.kwargs.get('pr_id')
-        if pr_id == '__all__':
-            return Profile.objects.all()
-        elif pr_id == None:
-            usr = self.request.user
-            user = Profile.objects.filter(user=usr)
-            return user
-        else:
-            return Profile.objects.filter(pk=pr_id)
+        # pr_id = self.kwargs.get('')
+
+        # if pr_id == '__all__':
+        #     return Profile.objects.all()
+        # elif pr_id == None:
+        #     usr = self.request.user
+        #     user = Profile.objects.filter(user=usr)
+        #     return user
+        # else:
+        #     return Profile.objects.filter(pk=pr_id)
+
+        usr = self.request.user
+        user = Profile.objects.filter(user=usr)
+
+        return user
 
 
 class NoteUpdateView(CreateAPIView):
@@ -357,3 +358,53 @@ class UserCourseDeleteView(CreateAPIView):
 
         except Course.DoesNotExist:
             return Response({"status": "course id not correct"})
+
+
+class ExamDateCreateView(CreateAPIView):
+    serializer_class = ExamDateSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        usr = self.request.user
+        user = Profile.objects.get(user=usr)
+        try:
+            uc = UserCourse.objects.get(pk=self.kwargs.get('uc_id', None), user_profile=user)
+            ExamDate.objects.create(title=self.request.data.get('title', None),
+                                    date=self.request.data.get('date', None),
+                                    user_course=uc,
+                                    grade=self.request.data.get('grade', None))
+            return Response({"status": "done"})
+        except UserCourse.DoesNotExist:
+            return Response({"status": "uc not correct"})
+
+
+class ExamDateUpdateView(CreateAPIView):
+    serializer_class = ExamDateSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        usr = self.request.user
+        user = Profile.objects.get(user=usr)
+        try:
+            uc = ExamDate.objects.get(pk=self.kwargs.get('ex_id', None))
+            uc.update(title=self.request.data.get('title', None),
+                      date=self.request.data.get('date', None),
+                      grade=self.request.data.get('grade', None))
+            return Response({"status": "done"})
+        except UserCourse.DoesNotExist:
+            return Response({"status": "ex not correct"})
+
+
+class ExamDateDeleteView(CreateAPIView):
+    serializer_class = ExamDateSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        usr = self.request.user
+        user = Profile.objects.get(user=usr)
+        try:
+            uc = ExamDate.objects.get(pk=self.kwargs.get('ex_id', None))
+            uc.delete()
+            return Response({"status": "done"})
+        except UserCourse.DoesNotExist:
+            return Response({"status": "ex not correct"})

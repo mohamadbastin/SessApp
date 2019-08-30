@@ -33,13 +33,16 @@ urlpatterns = [
     path('usercourse/delete/<cs_id>', UserCourseDeleteView.as_view()),
     path('create-db/', CreateDatabaseView.as_view()),
     path('clean-db/', CleanDatabaseView.as_view()),
-    path('profile/<pr_id>', ProfileView.as_view()),
+    path('profile/', ProfileView.as_view()),
     path('course/<course_id>', CourseView.as_view()),
     path('profile/update/', UpdateProfileView.as_view()),
     path('profile/delete/', DeleteProfileView.as_view()),
     path('note/create/<uc_id>', NoteCreateView.as_view()),
     path('note/update/<nt_id>', NoteUpdateView.as_view()),
     path('note/delete/<nt_id>', NoteDeleteView.as_view()),
+    path('exam/create/<uc_id>', ExamDateCreateView.as_view()),
+    path('exam/update/<ex_id>', ExamDateUpdateView.as_view()),
+    path('exam/delete/<ex_id>', ExamDateDeleteView.as_view())
 ]
 
 if settings.DEBUG:
