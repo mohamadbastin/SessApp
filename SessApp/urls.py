@@ -21,7 +21,6 @@ from rest_framework.authtoken import views
 from SessApp import settings
 from sess_app.views import *
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-token-auth/', views.obtain_auth_token),
@@ -30,6 +29,7 @@ urlpatterns = [
     path('departmentcourse/<dp_id>', DepartmentCourseView.as_view()),
     path('usercourse/<uc_id>', UserCourseListView.as_view()),
     path('create-db/', CreateDatabaseView.as_view()),
+    path('clean-db/', CleanDatabaseView.as_view()),
     path('profile/<pr_id>', ProfileView.as_view()),
     path('course/<course_id>', CourseView.as_view()),
     path('profile/update/', UpdateProfileView.as_view()),
@@ -38,8 +38,6 @@ urlpatterns = [
     path('note/update/<nt_id>', NoteUpdateView.as_view()),
     path('note/delete/', NoteDeleteView.as_view()),
 ]
-
-
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

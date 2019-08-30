@@ -155,7 +155,7 @@ class UserCourseListView(ListAPIView):
             return UserCourse.objects.filter(user_profile=user)
         # print(self.kwargs)
         # print (dp_id)
-        return UserCourse.objects.filter(pk=uc_id)
+        return UserCourse.objects.filter(pk=uc_id, user_profile=user)
 
 
 class ExamDateCreateView(CreateAPIView):
@@ -206,6 +206,24 @@ class CreateDatabaseView(CreateAPIView):
                                               gender=cs['gender'], final_time=cs['final_date'],
                                               time_room=cs['time_room'], department=last_dp, cs_id=cs['ident'])
 
+            return Response({"status": "done"})
+
+
+class CleanDatabaseView(CreateAPIView):
+    serializer_class = CreateDatabaseSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        pwd = request.data.get('pwd', None)
+        if pwd != 'amirmohamad':
+            return Response({}, status=status.HTTP_401_UNAUTHORIZED)
+        else:
+            for i in Department.objects.all():
+                # print(i.title)
+                if i.courses.all():
+                    continue
+                else:
+                    i.delete()
             return Response({"status": "done"})
 
 

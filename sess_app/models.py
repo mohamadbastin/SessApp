@@ -22,7 +22,7 @@ class Department(models.Model):
     dep_id = models.CharField(max_length=100)
 
     # course = models.ForeignKey('Course', on_delete=models.CASCADE)
-
+    @property
     def get_courses(self):
         return self.courses.all()
 
