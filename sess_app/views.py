@@ -58,6 +58,44 @@ class SignupView(CreateAPIView):
         return Response({"password": 'sent'})
 
 
+class LoginView(CreateAPIView):
+    serializer_class = UserGetOrCreate
+
+    allowed_methods = ['POST', ]
+
+    def post(self, request, *args, **kwargs):
+        the_serializer = self.serializer_class(data=request.data)
+
+        if not the_serializer.is_valid():
+            return Response({'errors': the_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+        phone_number = request.data.get('phone', None)
+        # department = request.data.get('department', None)
+
+        try:
+            profile = Profile.objects.get(phone=phone_number)
+            user = profile.user
+            # return Response({"status": "has account"})
+        except Profile.DoesNotExist:
+            # user = User.objects.create(username=phone_number)
+            # profile = Profile.objects.create(user=user, phone=phone_number)
+            # # if department != None:
+            # #     department = Department.objects.get(pk=department)
+            # #     profile.department = department
+            # profile.save()
+            return Response({"status": "no account"})
+
+        password = randint(1000, 9999)
+
+        user.set_password(password)
+        user.save()
+
+        message = Message(message="کلمه عبور یکبار مصرف کرسی شما: %d" % password, to=phone_number)
+        operator = Operator.objects.first()
+        operator.send_message(message)
+        return Response({"password": 'sent'})
+
+
 class UpdateProfileView(CreateAPIView):
     serializer_class = ProfileSerializer1
     permission_classes = [IsAuthenticated]
