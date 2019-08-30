@@ -29,14 +29,6 @@ class ProfileSerializer1(serializers.ModelSerializer):
         fields = ['pk', 'department', 'phone', 'name', 'picture']
 
 
-class ProfileSerializer(serializers.ModelSerializer):
-    courses = CourseSerializer1(many=True)
-
-    class Meta:
-        model = Profile
-        fields = ['pk', 'department', 'phone', 'name', 'picture', 'courses']
-
-
 class CourseSerializer(serializers.ModelSerializer):
     profiles = ProfileSerializer1(many=True)
 
@@ -70,14 +62,23 @@ class ExamDateSerializer(serializers.ModelSerializer):
 
 
 class UserCourseSerializer(serializers.ModelSerializer):
-    course = CourseSerializer()
+    course = CourseSerializer1()
     notes = NoteSerializer(many=True)
     exam_dates = ExamDateSerializer(many=True)
 
     class Meta:
         model = UserCourse
-        fields = ['pk', 'user_profile', 'course', 'notes', 'exam_dates']
+        fields = ['pk', 'course', 'notes', 'exam_dates']
 
 
 class CreateDatabaseSerializer(serializers.Serializer):
     pwd = serializers.CharField(max_length=100)
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    # courses = CourseSerializer1(many=True)
+    user_course = UserCourseSerializer(many=True)
+
+    class Meta:
+        model = Profile
+        fields = ['pk', 'department', 'phone', 'name', 'picture', 'user_course']
