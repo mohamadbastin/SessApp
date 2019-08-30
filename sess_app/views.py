@@ -52,14 +52,14 @@ class SignupView(CreateAPIView):
         user.set_password(password)
         user.save()
 
-        message = Message(message="کلمه عبور یکبار مصرف سس اپ شما: %d" % password, to=phone_number)
+        message = Message(message="کلمه عبور یکبار مصرف کرسی شما: %d" % password, to=phone_number)
         operator = Operator.objects.first()
         operator.send_message(message)
         return Response({"password": 'sent'})
 
 
 class UpdateProfileView(CreateAPIView):
-    serializer_class = ProfileSerializer
+    serializer_class = ProfileSerializer1
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
