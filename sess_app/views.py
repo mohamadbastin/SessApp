@@ -199,15 +199,17 @@ class UserCourseListView(ListAPIView):
     serializer_class = UserCourseSerializer
 
     def get_queryset(self):
-        uc_id = self.kwargs.get('uc_id')
+        cr_id = self.kwargs.get('cr_id')
+
         usr = self.request.user
         user = Profile.objects.get(user=usr)
 
-        if uc_id == '__all__':
+        if cr_id == '__all__':
             return UserCourse.objects.filter(user_profile=user)
         # print(self.kwargs)
         # print (dp_id)
-        return UserCourse.objects.filter(pk=uc_id, user_profile=user)
+        cr = Course.objects.get(pk=cr_id)
+        return UserCourse.objects.filter(course=cr, user_profile=user)
 
 
 class CreateDatabaseView(CreateAPIView):
