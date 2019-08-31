@@ -170,7 +170,7 @@ class CourseView(ListAPIView):
 
 class DepartmentCourseView(ListAPIView):
     serializer_class = CourseSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         dp_id = self.kwargs.get('dp_id')
