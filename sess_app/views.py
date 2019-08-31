@@ -393,10 +393,13 @@ class ExamDateUpdateView(CreateAPIView):
         user = Profile.objects.get(user=usr)
         try:
             uc = ExamDate.objects.get(pk=self.kwargs.get('ex_id', None))
-            uc.update(title=self.request.data.get('title', None),
-                      date=self.request.data.get('date', None),
-                      grade=self.request.data.get('grade', None))
+            uc.title = self.request.data.get('title', uc.title)
+            uc.date = self.request.data.get('date', uc.date)
+            uc.grade = self.request.data.get('grade', uc.grade)
+            uc.save()
+
             return Response({"status": "done"})
+
         except UserCourse.DoesNotExist:
             return Response({"status": "ex not correct"})
 
