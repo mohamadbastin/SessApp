@@ -186,12 +186,13 @@ class NoteCreateView(CreateAPIView):
         usr = self.request.user
         user = Profile.objects.get(user=usr)
         try:
-            uc = UserCourse.objects.get(pk=kwargs.get('uc_id', None), user_profile=user)
+            cr = Course.objects.get(pk=kwargs.get('cr_id', None),)
+            uc = UserCourse.objects.get(user_profile=user, course=cr)
             Note.objects.create(text=request.data.get('text', ' '), user_course=uc, date=request.data.get('date', ' '))
 
             return Response({"status": "done"})
         except UserCourse.DoesNotExist:
-            return Response({"status": "uc not correct"})
+            return Response({"status": "cr not correct"})
 
 
 class UserCourseListView(ListAPIView):
@@ -370,14 +371,15 @@ class ExamDateCreateView(CreateAPIView):
         usr = self.request.user
         user = Profile.objects.get(user=usr)
         try:
-            uc = UserCourse.objects.get(pk=self.kwargs.get('uc_id', None), user_profile=user)
+            cr = Course.objects.get(pk=kwargs.get('cr_id', None), )
+            uc = UserCourse.objects.get(user_profile=user, course=cr)
             ExamDate.objects.create(title=self.request.data.get('title', None),
                                     date=self.request.data.get('date', None),
                                     user_course=uc,
                                     grade=self.request.data.get('grade', None))
             return Response({"status": "done"})
         except UserCourse.DoesNotExist:
-            return Response({"status": "uc not correct"})
+            return Response({"status": "cr not correct"})
 
 
 class ExamDateUpdateView(CreateAPIView):
