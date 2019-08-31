@@ -304,8 +304,8 @@ class NoteUpdateView(CreateAPIView):
         try:
             nt_id = self.kwargs.get('nt_id')
             a = Note.objects.get(pk=nt_id)
-            a.text = self.request.data.get('text', ' ')
-            a.date = self.request.data.get('date', ' ')
+            a.text = self.request.data.get('text', a.text)
+            a.date = self.request.data.get('date', a.date)
             a.save()
             return Response({"status": "done"})
         except Note.DoesNotExist:
@@ -400,7 +400,7 @@ class ExamDateUpdateView(CreateAPIView):
 
             return Response({"status": "done"})
 
-        except UserCourse.DoesNotExist:
+        except ExamDate.DoesNotExist:
             return Response({"status": "ex not correct"})
 
 
@@ -415,5 +415,5 @@ class ExamDateDeleteView(CreateAPIView):
             uc = ExamDate.objects.get(pk=self.kwargs.get('ex_id', None))
             uc.delete()
             return Response({"status": "done"})
-        except UserCourse.DoesNotExist:
+        except ExamDate.DoesNotExist:
             return Response({"status": "ex not correct"})
