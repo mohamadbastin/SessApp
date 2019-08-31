@@ -170,6 +170,7 @@ class CourseView(ListAPIView):
 
 class DepartmentCourseView(ListAPIView):
     serializer_class = CourseSerializer
+
     # permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -186,11 +187,12 @@ class NoteCreateView(CreateAPIView):
         usr = self.request.user
         user = Profile.objects.get(user=usr)
         try:
-            cr = Course.objects.get(pk=kwargs.get('cr_id', None),)
+            cr = Course.objects.get(pk=kwargs.get('cr_id', None), )
             uc = UserCourse.objects.get(user_profile=user, course=cr)
-            Note.objects.create(text=request.data.get('text', ' '), user_course=uc, date=request.data.get('date', ' '))
+            a = Note.objects.create(text=request.data.get('text', ' '), user_course=uc,
+                                    date=request.data.get('date', ' '))
 
-            return Response({"status": "done"})
+            return Response({"status": "done", "pk": a.pk})
         except UserCourse.DoesNotExist:
             return Response({"status": "cr not correct"})
 
