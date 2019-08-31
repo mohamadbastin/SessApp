@@ -86,4 +86,4 @@ class ExamDate(models.Model):
     grade = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
-        return self.title
+        return str(self.title) + ' / ' + str(self.user_course)
