@@ -52,7 +52,7 @@ class DepartmentSerializer(serializers.ModelSerializer):
 class NoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Note
-        fields = ['text', 'user_course', 'date']
+        fields = ['pk','text', 'user_course', 'date']
 
 
 class ExamDateSerializer(serializers.ModelSerializer):
