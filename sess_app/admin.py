@@ -8,4 +8,7 @@ admin.site.register(Course)
 admin.site.register(UserCourse)
 admin.site.register(Note)
 admin.site.register(ExamDate)
+admin.site.register(Message)
+admin.site.register(Operator)
+
 
