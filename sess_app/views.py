@@ -8,7 +8,7 @@ from rest_framework.generics import CreateAPIView, ListAPIView, GenericAPIView, 
 # Create your views here.
 from rest_framework.response import Response
 
-from sms.models import Message, Operator
+# from sms.models import Message, Operator
 from .models import *
 from .serializers import *
 from rest_framework.permissions import IsAuthenticated
@@ -54,8 +54,9 @@ class SignupView(CreateAPIView):
         user.set_password(password)
         user.save()
 
-        message = Message(message="کلمه عبور یکبار مصرف کرسی شما: %d" % password, to=phone_number)
-        operator = Operator.objects.first()
+        message = Message(token=password, to=phone_number)
+
+        operator = Operator.objects.get(name="sahar")
         operator.send_message(message)
         return Response({"password": 'sent'})
 
@@ -93,8 +94,9 @@ class LoginView(CreateAPIView):
         user.set_password(password)
         user.save()
 
-        message = Message(message="کلمه عبور یکبار مصرف کرسی شما: %d" % password, to=phone_number)
-        operator = Operator.objects.first()
+        message = Message(token=password, to=phone_number)
+
+        operator = Operator.objects.get(name="sahar")
         operator.send_message(message)
         return Response({"password": 'sent'})
 
