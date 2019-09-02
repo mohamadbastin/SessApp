@@ -359,8 +359,10 @@ class UserCourseDeleteView(CreateAPIView):
 
         try:
             cs = Course.objects.get(pk=cs_id)
-            a = UserCourse.objects.get(user_profile=user, course=cs)
-            a.delete()
+            a = UserCourse.objects.filter(user_profile=user, course=cs)
+
+            for i in a:
+                a.delete()
             return Response({"status": "done"})
 
         except Course.DoesNotExist:
