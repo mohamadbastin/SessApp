@@ -86,7 +86,7 @@ class ExamDate(models.Model):
     title = models.CharField(max_length=1000)
     date = models.CharField(max_length=1000, null=True, blank=True)
     user_course = models.ForeignKey(UserCourse, related_name="exam_dates", on_delete=models.CASCADE)
-    grade = models.IntegerField(null=True, blank=True)
+    grade = models.CharField(null=True, blank=True, max_length=50)
 
     def __str__(self):
         return str(self.title) + ' / ' + str(self.user_course)
