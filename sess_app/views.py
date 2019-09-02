@@ -424,3 +424,14 @@ class ExamDateDeleteView(CreateAPIView):
             return Response({"status": 200})
         except ExamDate.DoesNotExist:
             return Response({"text": "ex not correct", "status": 404})
+
+
+# class ChangeNumber(CreateAPIView):
+#     serializer_class = ProfileSerializer
+#     permission_classes = [IsAuthenticated]
+#
+#     def post(self, request, *args, **kwargs):
+#         usr = self.request.user
+#         user = Profile.objects.get(user=usr)
+#
+#
