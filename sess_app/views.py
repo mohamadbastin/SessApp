@@ -39,7 +39,7 @@ class SignupView(CreateAPIView):
         try:
             userr = User.objects.get(username=phone_number)
             profile = Profile.objects.get(user=userr)
-            h = {"status": 400, "text": "شماره شما قبلا ثبت شده.\nورود کنید."}
+            h = {"status": 400, "text": "شماره شما قبلا ثبت شده.nورود کنید."}
             return Response({"status": 400, "text": "شماره شما قبلا ثبت شده.\nورود کنید."}, headers=h)
 
         except (Profile.DoesNotExist, User.DoesNotExist):
@@ -89,7 +89,7 @@ class LoginView(CreateAPIView):
             # #     department = Department.objects.get(pk=department)
             # #     profile.department = department
             # profile.save()
-            h = {"status": 404, "text": "شماره شما ثبت نشده.\nثبت نام کنید."}
+            h = {"status": 404, "text": "شماره شما ثبت نشده.ثبت نام کنید."}
             return Response({"status": 404, "text": "شماره شما ثبت نشده.\nثبت نام کنید."}, headers=h)
 
         password = randint(1000, 9999)
@@ -440,12 +440,54 @@ class ExamDateDeleteView(CreateAPIView):
         except ExamDate.DoesNotExist:
             return Response({"text": "ex not correct", "status": 404}, {"text": "ex not correct", "status": 404})
 
-# class ChangeNumber(CreateAPIView):
-#     serializer_class = ProfileSerializer
-#     permission_classes = [IsAuthenticated]
-#
-#     def post(self, request, *args, **kwargs):
-#         usr = self.request.user
-#         user = Profile.objects.get(user=usr)
-#
-#
+
+class ChangeNumberFirst(CreateAPIView):
+    serializer_class = ProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        usr = self.request.user
+        user = Profile.objects.get(user=usr)
+
+        new_pn = self.request.data.get('phone', None)
+        if new_pn:
+            try:
+                User.objects.get(username=new_pn)
+                h = {"status": 400, "text": "شماره شما قبلا ثبت شده.ورود کنید."}
+                return Response({"status": 400, "text": "شماره شما قبلا ثبت شده.\nورود کنید."}, headers=h)
+            except User.DoesNotExist:
+                password = randint(1000, 9999)
+
+                usr.first_name = password
+                usr.save()
+
+                message = Message(token=password, to=new_pn)
+
+                operator = Operator.objects.get(name="sahar")
+                operator.send_message(message)
+
+                h = {"text": "password sent", "status": 200}
+                return Response({"text": "password sent", "status": 200}, headers=h)
+
+
+class ChangeNumberSecond(CreateAPIView):
+    serializer_class = ProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        usr = self.request.user
+        user = Profile.objects.get(user=usr)
+
+        code = self.request.data.get('code', 0)
+        newpn = self.request.data.get('phone', None)
+
+        if usr.first_name == code and newpn:
+            usr.username = newpn
+            usr.save()
+            user.phone = newpn
+            user.save()
+
+            return Response({'status': 200, "text": "شماره شما تغییر یافت.\nمجددا ورود کنید."},
+                            headers={'status': 200, "text": "شماره شما تغییر یافت.مجددا ورود کنید."})
+        else:
+            return Response({"status": 400})
