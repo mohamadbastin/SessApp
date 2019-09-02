@@ -42,7 +42,9 @@ urlpatterns = [
     path('note/delete/<nt_id>', NoteDeleteView.as_view()),
     path('exam/create/<cr_id>', ExamDateCreateView.as_view()),
     path('exam/update/<ex_id>', ExamDateUpdateView.as_view()),
-    path('exam/delete/<ex_id>', ExamDateDeleteView.as_view())
+    path('exam/delete/<ex_id>', ExamDateDeleteView.as_view()),
+    path('changenumber/', ChangeNumberFirst.as_view()),
+    path('verifycode/', ChangeNumberSecond.as_view())
 ]
 
 if settings.DEBUG:
