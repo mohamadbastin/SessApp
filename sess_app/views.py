@@ -39,7 +39,7 @@ class SignupView(CreateAPIView):
         try:
             userr = User.objects.get(username=phone_number)
             profile = Profile.objects.get(user=userr)
-            return Response({"status": "has account"})
+            return Response({"status": 400, "text": "شماره شما قبلا ثبت شده.\nورود کنید."})
 
         except (Profile.DoesNotExist, User.DoesNotExist):
             user = User.objects.create(username=phone_number)
@@ -58,7 +58,7 @@ class SignupView(CreateAPIView):
 
         operator = Operator.objects.get(name="sahar")
         operator.send_message(message)
-        return Response({"password": 'sent'})
+        return Response({"text": "password sent", "status": 200})
 
 
 class LoginView(CreateAPIView):
@@ -87,7 +87,7 @@ class LoginView(CreateAPIView):
             # #     department = Department.objects.get(pk=department)
             # #     profile.department = department
             # profile.save()
-            return Response({"status": "no account"})
+            return Response({"status": 404, "text": "شماره شما ثبت نشده.\nثبت نام کنید."})
 
         password = randint(1000, 9999)
 
@@ -98,7 +98,7 @@ class LoginView(CreateAPIView):
 
         operator = Operator.objects.get(name="sahar")
         operator.send_message(message)
-        return Response({"password": 'sent'})
+        return Response({"text": 'password sent', "status": 200})
 
 
 class UpdateProfileView(CreateAPIView):
@@ -115,7 +115,7 @@ class UpdateProfileView(CreateAPIView):
         # user.department = self.request.data.get('department', None)
         user.save()
 
-        return Response({"status": "done"})
+        return Response({"status": 200})
 
 
 class DeleteProfileView(CreateAPIView):
@@ -129,7 +129,7 @@ class DeleteProfileView(CreateAPIView):
         user.delete()
         usr.delete()
 
-        return Response({"status": "done"})
+        return Response({"status": 200})
 
 
 # class DepartmentUpdateView(CreateAPIView):
@@ -194,9 +194,9 @@ class NoteCreateView(CreateAPIView):
             a = Note.objects.create(text=request.data.get('text', ' '), user_course=uc,
                                     date=request.data.get('date', ' '))
 
-            return Response({"status": "done", "pk": a.pk})
+            return Response({"status": 200, "pk": a.pk})
         except UserCourse.DoesNotExist:
-            return Response({"status": "cr not correct"})
+            return Response({"text": "cr not correct", "status": 404})
 
 
 class UserCourseListView(ListAPIView):
@@ -253,7 +253,7 @@ class CreateDatabaseView(CreateAPIView):
                                               gender=cs['gender'], final_time=cs['final_date'],
                                               time_room=cs['time_room'], department=last_dp, cs_id=cs['ident'])
 
-            return Response({"status": "done"})
+            return Response({"status": 200})
 
 
 class CleanDatabaseView(CreateAPIView):
@@ -271,7 +271,7 @@ class CleanDatabaseView(CreateAPIView):
                     continue
                 else:
                     i.delete()
-            return Response({"status": "done"})
+            return Response({"status": 200})
 
 
 class ProfileView(ListAPIView):
@@ -309,9 +309,9 @@ class NoteUpdateView(CreateAPIView):
             a.text = self.request.data.get('text', a.text)
             a.date = self.request.data.get('date', a.date)
             a.save()
-            return Response({"status": "done"})
+            return Response({"status": 200})
         except Note.DoesNotExist:
-            return Response({"status": "note not correct"})
+            return Response({"text": "nt not correct", "status": 404})
 
 
 class NoteDeleteView(CreateAPIView):
@@ -323,9 +323,9 @@ class NoteDeleteView(CreateAPIView):
             nt_id = self.kwargs.get('nt_id')
             a = Note.objects.get(pk=nt_id)
             a.delete()
-            return Response({"status": "done"})
+            return Response({"status": 200})
         except Note.DoesNotExist:
-            return Response({"status": "note not correct"})
+            return Response({"text": "nt not correct", "status": 404})
 
 
 class UserCourseCreateView(CreateAPIView):
@@ -340,11 +340,14 @@ class UserCourseCreateView(CreateAPIView):
 
         try:
             cs = Course.objects.get(pk=cs_id)
+            b = UserCourse.objects.filter(user_profile=user, course=cs)
+            if b:
+                return Response({"text": "already enrolled", "status": 400})
             a = UserCourse.objects.create(user_profile=user, course=cs)
-            return Response({"status": "done", "id": a.pk})
+            return Response({"status": 200, "id": a.pk})
 
         except Course.DoesNotExist:
-            return Response({"status": "course id not correct"})
+            return Response({"text": "cr not correct", "status": 404})
 
 
 class UserCourseDeleteView(CreateAPIView):
@@ -363,10 +366,10 @@ class UserCourseDeleteView(CreateAPIView):
 
             for i in a:
                 a.delete()
-            return Response({"status": "done"})
+            return Response({"status": 200})
 
         except Course.DoesNotExist:
-            return Response({"status": "course id not correct"})
+            return Response({"text": "cr not correct", "status": 404})
 
 
 class ExamDateCreateView(CreateAPIView):
@@ -383,9 +386,9 @@ class ExamDateCreateView(CreateAPIView):
                                          date=self.request.data.get('date', None),
                                          user_course=uc,
                                          grade=self.request.data.get('grade', None))
-            return Response({"status": "done", "pk": ex.pk})
+            return Response({"status": 200, "pk": ex.pk})
         except UserCourse.DoesNotExist:
-            return Response({"status": "cr not correct"})
+            return Response({"text": "cr not correct", "status": 404})
 
 
 class ExamDateUpdateView(CreateAPIView):
@@ -402,10 +405,10 @@ class ExamDateUpdateView(CreateAPIView):
             uc.grade = self.request.data.get('grade', uc.grade)
             uc.save()
 
-            return Response({"status": "done"})
+            return Response({"status": 200})
 
         except ExamDate.DoesNotExist:
-            return Response({"status": "ex not correct"})
+            return Response({"text": "ex not correct", "status": 404})
 
 
 class ExamDateDeleteView(CreateAPIView):
@@ -418,6 +421,6 @@ class ExamDateDeleteView(CreateAPIView):
         try:
             uc = ExamDate.objects.get(pk=self.kwargs.get('ex_id', None))
             uc.delete()
-            return Response({"status": "done"})
+            return Response({"status": 200})
         except ExamDate.DoesNotExist:
-            return Response({"status": "ex not correct"})
+            return Response({"text": "ex not correct", "status": 404})
