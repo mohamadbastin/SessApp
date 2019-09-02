@@ -12,7 +12,7 @@ class Profile(models.Model):
     department = models.ForeignKey('Department', on_delete=models.CASCADE, null=True, blank=True)
     phone = models.CharField(max_length=20)
     name = models.CharField(max_length=1000, )
-    picture = models.ImageField(null=True, blank=True)
+    picture = models.CharField(null=True, blank=True,max_length=1000000000000000)
 
     courses = models.ManyToManyField('Course', through='UserCourse')
 
