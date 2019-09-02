@@ -108,10 +108,10 @@ class UpdateProfileView(CreateAPIView):
     def post(self, request, *args, **kwargs):
         usr = self.request.user
         user = Profile.objects.get(user=usr)
-        dep = Department.objects.get(pk=self.request.data.get('department', None))
+        dep = Department.objects.get(pk=self.request.data.get('department', user.department))
         user.department = dep
-        user.name = self.request.data.get('name', None)
-        user.picture = self.request.data.get('picture', None)
+        user.name = self.request.data.get('name', user.name)
+        user.picture = self.request.data.get('picture', user.picture)
         # user.department = self.request.data.get('department', None)
         user.save()
 
@@ -424,3 +424,14 @@ class ExamDateDeleteView(CreateAPIView):
             return Response({"status": 200})
         except ExamDate.DoesNotExist:
             return Response({"text": "ex not correct", "status": 404})
+
+
+# class ChangeNumber(CreateAPIView):
+#     serializer_class = ProfileSerializer
+#     permission_classes = [IsAuthenticated]
+#
+#     def post(self, request, *args, **kwargs):
+#         usr = self.request.user
+#         user = Profile.objects.get(user=usr)
+#
+#
