@@ -39,11 +39,18 @@ class SignupView(CreateAPIView):
         try:
             userr = User.objects.get(username=phone_number)
             profile = Profile.objects.get(user=userr)
-            h = {"status": 400, "text": "شماره شما قبلا ثبت شده.nورود کنید."}
-            return Response({"status": 400, "text": "شماره شما قبلا ثبت شده.\nورود کنید."}, headers=h)
+            print('n: ', profile.name)
+            if profile.name != '':
+                h = {"status": 400, "text": "شماره شما قبلا ثبت شده.ورود کنید."}
+                return Response({"status": 400, "text": "شماره شما قبلا ثبت شده.\nورود کنید."}, headers=h)
+            else:
+                raise Exception(User.DoesNotExist)
 
-        except (Profile.DoesNotExist, User.DoesNotExist):
-            user = User.objects.create(username=phone_number)
+        except :
+            try:
+                user = User.objects.get(username=phone_number)
+            except User.DoesNotExist:
+                user = User.objects.create(username=phone_number)
             profile = Profile.objects.create(user=user, phone=phone_number)
             # if department != None:
             #     department = Department.objects.get(pk=department)
@@ -226,7 +233,7 @@ class UserCourseListView(ListAPIView):
 
 
 class CreateDatabaseView(CreateAPIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     serializer_class = CreateDatabaseSerializer
 
     def post(self, request, *args, **kwargs):
@@ -235,7 +242,7 @@ class CreateDatabaseView(CreateAPIView):
             return Response({}, status=status.HTTP_401_UNAUTHORIZED)
         else:
 
-            f = open('13981.txt')
+            f = open('sess_app/13981.txt')
             a = json.load(f)
             for dep in a:
                 try:
@@ -266,7 +273,8 @@ class CreateDatabaseView(CreateAPIView):
 
 class CleanDatabaseView(CreateAPIView):
     serializer_class = CreateDatabaseSerializer
-    permission_classes = [IsAuthenticated]
+
+    # permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         pwd = request.data.get('pwd', None)
