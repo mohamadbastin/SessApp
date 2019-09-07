@@ -7,7 +7,7 @@ from .models import *
 
 class CourseAdmin(admin.ModelAdmin):
     list_filter = ['department']
-    list_display = ['title', 'teacher', 'group']
+    list_display = ['title', 'teacher', 'group', 'vahed', 'unit']
 
 
 admin.site.register(Department)
