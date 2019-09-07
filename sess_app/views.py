@@ -46,7 +46,7 @@ class SignupView(CreateAPIView):
             else:
                 raise Exception(User.DoesNotExist)
 
-        except :
+        except:
             try:
                 user = User.objects.get(username=phone_number)
             except User.DoesNotExist:
@@ -251,8 +251,10 @@ class CreateDatabaseView(CreateAPIView):
                     for cs in dep['courses']:
                         try:
                             last_cs = Course.objects.get(cs_id=cs['ident'])
-                            last_cs.title, last_cs.group, last_cs.teacher, last_cs.gender, last_cs.final_time, last_cs.time_room = \
-                                cs['title'], cs['group'], cs['teacher'], cs['gender'], cs['final_date'], cs['time_room']
+                            last_cs.title, last_cs.group, last_cs.teacher, last_cs.gender, last_cs.final_time, \
+                            last_cs.time_room, last_cs.vahed, last_cs.unit = \
+                                cs['title'], cs['group'], cs['teacher'], cs['gender'], cs['final_date'], cs[
+                                    'time_room'], cs['vahed'], cs['unit']
 
                             last_cs.department = last_dp
                             last_cs.save()
@@ -260,13 +262,15 @@ class CreateDatabaseView(CreateAPIView):
                         except Course.DoesNotExist:
                             Course.objects.create(title=cs['title'], group=cs['group'], teacher=cs['teacher'],
                                                   gender=cs['gender'], final_time=cs['final_date'],
-                                                  time_room=cs['time_room'], department=last_dp, cs_id=cs['ident'])
+                                                  time_room=cs['time_room'], department=last_dp, cs_id=cs['ident'],
+                                                  vahed=cs['vahed'], unit=cs['unit'])
                 except Department.DoesNotExist:
                     last_dp = Department.objects.create(title=dep['title'], dep_id=dep['id'])
                     for cs in dep['courses']:
                         Course.objects.create(title=cs['title'], group=cs['group'], teacher=cs['teacher'],
                                               gender=cs['gender'], final_time=cs['final_date'],
-                                              time_room=cs['time_room'], department=last_dp, cs_id=cs['ident'])
+                                              time_room=cs['time_room'], department=last_dp, cs_id=cs['ident'],
+                                              vahed=cs['vahed'], unit=cs['unit'])
 
             return Response({"status": 200}, headers={"status": 200})
 
@@ -499,3 +503,35 @@ class ChangeNumberSecond(CreateAPIView):
                             headers={'status': 200, "text": "شماره شما تغییر یافت.مجددا ورود کنید."})
         else:
             return Response({"status": 400})
+
+
+class ReportListView(ListAPIView):
+    serializer_class = ReportSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        rp_id = self.kwargs.get('rp_id')
+        if rp_id == '__all__':
+            return Report.objects.all()
+        return Course.objects.filter(pk=rp_id)
+
+
+class ReportCreateView(CreateAPIView):
+    serializer_class = ReportSerializer
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        usr = self.request.user
+        user = Profile.objects.get(user=usr)
+
+        a = Report.objects.create(user=user, text=self.request.data.get('text', ' '))
+
+        message = Message(token=a.text, to="+989379852503", token2="http://sessapp.moarefe98.ir/report/"+str(a.pk))
+
+        operator = Operator.objects.get(name="sahar")
+        operator.send_message(message)
+        h = {"text": "report sent", "status": 200}
+        return Response({"text": "report sent", "status": 200}, headers=h)
+
+

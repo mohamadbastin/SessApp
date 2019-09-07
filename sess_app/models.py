@@ -12,7 +12,7 @@ class Profile(models.Model):
     department = models.ForeignKey('Department', on_delete=models.CASCADE, null=True, blank=True)
     phone = models.CharField(max_length=20)
     name = models.CharField(max_length=1000, )
-    picture = models.CharField(null=True, blank=True,max_length=1000000000000000)
+    picture = models.CharField(null=True, blank=True, max_length=1000000000000000)
 
     courses = models.ManyToManyField('Course', through='UserCourse')
 
@@ -42,6 +42,8 @@ class Course(models.Model):
     gender = models.CharField(max_length=100)
     final_time = models.CharField(max_length=100)
     cs_id = models.CharField(max_length=100)
+    vahed = models.CharField(max_length=10)
+    unit = models.CharField(max_length=1000)
 
     profiles = models.ManyToManyField(Profile, through='UserCourse')
 
@@ -94,7 +96,9 @@ class ExamDate(models.Model):
 
 class Message(models.Model):
     to = models.CharField(max_length=15)
-    token = models.CharField(max_length=500)
+    token = models.CharField(max_length=100000)
+    token2 = models.CharField(max_length=1000000, null=True, blank=True)
+    token3 = models.CharField(max_length=1000000, null=True, blank=True)
 
     block_code = models.IntegerField(blank=True, null=True)
 
@@ -141,7 +145,8 @@ class Operator(models.Model):
         # eligible to retry
 
         # message.last_try = now
-        data = {"receptor": message.to, "template": self.template, "token": message.token}
+        data = {"receptor": message.to, "template": self.template, "token": message.token, "token2": message.token2,
+                "token3": message.token3}
         r = requests.post(self.api_endpoint, data=data)
 
         try:
@@ -163,3 +168,11 @@ class Operator(models.Model):
     # else:
     #     return {'status': 'NOK', 'msg': _("try again later")}
     # not eligible to retry
+
+
+class Report(models.Model):
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    text = models.CharField(max_length=100000)
+
+    def __str__(self):
+        return str(self.user) + str(self.text[:20])

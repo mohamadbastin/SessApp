@@ -44,7 +44,9 @@ urlpatterns = [
     path('exam/update/<ex_id>', ExamDateUpdateView.as_view()),
     path('exam/delete/<ex_id>', ExamDateDeleteView.as_view()),
     path('changenumber/', ChangeNumberFirst.as_view()),
-    path('verifycode/', ChangeNumberSecond.as_view())
+    path('verifycode/', ChangeNumberSecond.as_view()),
+    path('report/create/', ReportCreateView.as_view()),
+    path('report/<rp_id>', ReportListView.as_view())
 ]
 
 if settings.DEBUG:
