@@ -1,23 +1,27 @@
-SessApp (21 items)
+SessApp (26 items)
 ✓ Sign up
 ✓ Login
 ✓ Logout
-☐ Set department
-☐ Get departments
-☐ Get courses
-☐ Enroll courses
-☐ Unroll courses
-☐ Get course informations
-☐ Set,delete,update notes to usercourse
-☐ Set,delete,update exam dates to usercourse
-☐ Set,delete,update grades to usercourse
-☐ Scrap sess
-☐ Build database
-☐ Update database
-☐ Delete objects
+✓ Set department
+✓ Get departments
+✓ Get courses
+✓ Enroll courses
+✓ Unroll courses
+✓ Get course informations
+✓ Set,delete,update notes to usercourse
+✓ Set,delete,update exam dates to usercourse
+✓ Set,delete,update grades to usercourse
+✓ Scrap sess
+✓ Build database
+✓ Update database
+✓ Delete objects
 ✓ Add name to profile
-☐ See name of others enrolled
+✓ See name of others enrolled
 ✓ Add picture to profile
-☐ Update, delete profile
+✓ Update, delete profile
 ✓ Add get course function to department model
-☐ Change Number
+✓ Vahed
+✓ For what majors
+☐ Enteqad pishnhad
+☐ Reports
+☐ Make exam public

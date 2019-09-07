@@ -32,13 +32,14 @@ def get_departments():
         'sec-fetch-mode': 'navigate',
         'sec-fetch-user': '?1',
         'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
-        'sec-fetch-site': 'none',
+        'sec-fetch-site': 'same-origin',
+        'referer': 'https://sess.shirazu.ac.ir/Sess/271312760504',
         'accept-encoding': 'gzip, deflate, br',
-        'accept-language': 'en-US,en;q=0.9',
-        'cookie': '__derak_session=548b6955-f341-4b6b-cb87-c9490f9776d9; ASP.NET_SessionId=iexfpjy05vcx4uyt4rn0u222',
+        'accept-language': 'en-US,en;q=0.9,fa;q=0.8',
+        'cookie': '__derak_session=548b6955-f341-4b6b-cb87-c9490f9776d9; ASP.NET_SessionId=cfiz0q04bdsrmnjl3ewdxl2d',
     }
 
-    response = requests.get('https://sess.shirazu.ac.ir/Sess/3595631227692', headers=headers, )
+    response = requests.get('https://sess.shirazu.ac.ir/Sess/3283227265579', headers=headers, )
 
     soup = BeautifulSoup(response.text, "html.parser")
 
@@ -70,10 +71,10 @@ def get_department_courses(departmentId, dep_progress):
         'sec-fetch-user': '?1',
         'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
         'sec-fetch-site': 'same-origin',
-        'referer': 'https://sess.shirazu.ac.ir/Sess/3595631227692',
+        'referer': 'https://sess.shirazu.ac.ir/Sess/3283227265579',
         'accept-encoding': 'gzip, deflate, br',
         'accept-language': 'en-US,en;q=0.9,fa;q=0.8',
-        'cookie': '__derak_session=548b6955-f341-4b6b-cb87-c9490f9776d9; ASP.NET_SessionId=iexfpjy05vcx4uyt4rn0u222',
+        'cookie': '__derak_session=548b6955-f341-4b6b-cb87-c9490f9776d9; ASP.NET_SessionId=cfiz0q04bdsrmnjl3ewdxl2d',
     }
 
     data = {
@@ -86,7 +87,7 @@ def get_department_courses(departmentId, dep_progress):
         'Channel': 'Act=List;'
     }
 
-    response = requests.post('https://sess.shirazu.ac.ir/Sess/3595631227692', headers=headers, data=data)
+    response = requests.post('https://sess.shirazu.ac.ir/Sess/3283227265579', headers=headers, data=data)
 
     soup = BeautifulSoup(response.text, "html.parser")
     courses_div = soup.find("div", {'id': "edList"})
@@ -133,10 +134,10 @@ def set_session_course(courseIdent, departmentId):
         'sec-fetch-user': '?1',
         'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
         'sec-fetch-site': 'same-origin',
-        'referer': 'https://sess.shirazu.ac.ir/Sess/3595631227692',
+        'referer': 'https://sess.shirazu.ac.ir/Sess/3283227265579',
         'accept-encoding': 'gzip, deflate, br',
         'accept-language': 'en-US,en;q=0.9,fa;q=0.8',
-        'cookie': '__derak_session=548b6955-f341-4b6b-cb87-c9490f9776d9; ASP.NET_SessionId=iexfpjy05vcx4uyt4rn0u222',
+        'cookie': '__derak_session=548b6955-f341-4b6b-cb87-c9490f9776d9; ASP.NET_SessionId=cfiz0q04bdsrmnjl3ewdxl2d',
     }
 
     data = {
@@ -149,7 +150,7 @@ def set_session_course(courseIdent, departmentId):
         'Channel': 'Act=Edit;Ident=' + str(courseIdent) + ';'
     }
 
-    response = requests.post('https://sess.shirazu.ac.ir/Sess/3595631227692', headers=headers, data=data)
+    response = requests.post('https://sess.shirazu.ac.ir/Sess/3283227265579', headers=headers, data=data)
     # soup = BeautifulSoup(response.text, "html.parser")
     # print(soup)
 
@@ -165,25 +166,30 @@ def get_course_time_room(courseIdent, departmentId):
         'sec-fetch-mode': 'navigate',
         'sec-fetch-user': '?1',
         'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
-        'sec-fetch-site': 'same-origin',
-        'referer': 'https://sess.shirazu.ac.ir/Sess/3595631227692',
+        'sec-fetch-site': 'none',
+        'referer': 'https://sess.shirazu.ac.ir/Sess/3283227265579',
         'accept-encoding': 'gzip, deflate, br',
         'accept-language': 'en-US,en;q=0.9,fa;q=0.8',
-        'cookie': '__derak_session=548b6955-f341-4b6b-cb87-c9490f9776d9; ASP.NET_SessionId=iexfpjy05vcx4uyt4rn0u222',
+        'cookie': '__derak_session=548b6955-f341-4b6b-cb87-c9490f9776d9; ASP.NET_SessionId=cfiz0q04bdsrmnjl3ewdxl2d',
     }
 
-    response = requests.get('https://sess.shirazu.ac.ir/Sess/3022671409279', headers=headers)
+    response = requests.get('https://sess.shirazu.ac.ir/Sess/3172266095820', headers=headers)
 
     soup = BeautifulSoup(response.text, "html.parser")
     time_room_div = soup.find("div", {'id': "edTimeRoom"})
     teacher_div = soup.find("div", {'id': "edTch"})
     gender_div = soup.find("div", {'id': "edSex"})
     final_date_div = soup.find("div", {'id': "edFinalDate"})
+    vahed_div = soup.find("div", {'id': "edTotalUnit"})
+    unit_div = soup.find("div", {'id': "edUnit"})
+
     return {
         'time_room': '\n'.join([x for x in time_room_div.contents if type(x) is bs4.element.NavigableString]),
         'teacher': teacher_div.text,
         'gender': gender_div.text,
         'final_date': final_date_div.text,
+        'vahed': vahed_div.text,
+        'unit': unit_div.text
     }
 
 

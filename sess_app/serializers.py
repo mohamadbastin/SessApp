@@ -18,7 +18,7 @@ class CourseSerializer1(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = ['pk', 'title', 'department', 'teacher', 'group', 'time_room', 'gender', 'final_time', 'cs_id',
-                  ]
+                  'vahed', 'unit']
 
 
 class ProfileSerializer1(serializers.ModelSerializer):
@@ -35,7 +35,7 @@ class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = ['pk', 'title', 'department', 'teacher', 'group', 'time_room', 'gender', 'final_time', 'cs_id',
-                  'profiles']
+                  'vahed', 'unit', 'profiles']
 
 
 # CourseSerializer.profiles = ProfileSerializer()
@@ -52,7 +52,7 @@ class DepartmentSerializer(serializers.ModelSerializer):
 class NoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Note
-        fields = ['pk','text', 'user_course', 'date']
+        fields = ['pk', 'text', 'user_course', 'date']
 
 
 class ExamDateSerializer(serializers.ModelSerializer):
@@ -82,3 +82,11 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ['pk', 'department', 'phone', 'name', 'picture', 'user_course']
+
+
+class ReportSerializer(serializers.ModelSerializer):
+    user = ProfileSerializer1
+
+    class Meta:
+        model = Report
+        fields = ['pk', 'user', 'text']
