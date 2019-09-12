@@ -20,3 +20,5 @@ admin.site.register(Message)
 admin.site.register(Operator)
 admin.site.register(Report)
 admin.site.register(PrivacyPolicy)
+admin.site.register(Contact)
+
