@@ -535,8 +535,8 @@ class ReportCreateView(CreateAPIView):
         return Response({"text": "report sent", "status": 200}, headers=h)
 
 
-# class PpView(ListAPIView):
-#     serializer_class = PpSerializer
-#     permission_classes = [IsAuthenticated]
-#
-#     queryset = PrivacyPolicy.objects.first()
+class PpView(ListAPIView):
+    serializer_class = PpSerializer
+    permission_classes = [IsAuthenticated]
+
+    queryset = PrivacyPolicy.objects.first()
