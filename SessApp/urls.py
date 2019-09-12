@@ -46,7 +46,8 @@ urlpatterns = [
     path('changenumber/', ChangeNumberFirst.as_view()),
     path('verifycode/', ChangeNumberSecond.as_view()),
     path('report/create/', ReportCreateView.as_view()),
-    path('report/<rp_id>', ReportListView.as_view())
+    path('report/<rp_id>', ReportListView.as_view()),
+    path('policy/', PpView.as_view(s1))
 ]
 
 if settings.DEBUG:
