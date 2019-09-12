@@ -181,3 +181,10 @@ class Report(models.Model):
 class PrivacyPolicy(models.Model):
     pp = models.CharField(max_length=100000)
     tos = models.CharField(max_length=100000)
+
+
+class Contact(models.Model):
+    share_text = models.CharField(max_length=1000)
+    telegram = models.CharField(max_length=100)
+    whatsapp = models.CharField(max_length=100)
+    instagram = models.CharField(max_length=100)

@@ -541,3 +541,11 @@ class PpView(ListAPIView):
 
     def get_queryset(self):
         return PrivacyPolicy.objects.all()
+
+
+class ContactView(ListAPIView):
+    serializer_class = ContactSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Contact.objects.all()
