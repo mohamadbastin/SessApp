@@ -188,3 +188,4 @@ class Contact(models.Model):
     telegram = models.CharField(max_length=100)
     whatsapp = models.CharField(max_length=100)
     instagram = models.CharField(max_length=100)
+    phone = models.CharField(max_length=20)
