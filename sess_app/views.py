@@ -539,4 +539,5 @@ class PpView(ListAPIView):
     serializer_class = PpSerializer
     permission_classes = [IsAuthenticated]
 
-    queryset = PrivacyPolicy.objects.first()
+    def get_queryset(self):
+        return PrivacyPolicy.objects.all()
