@@ -527,7 +527,7 @@ class ReportCreateView(CreateAPIView):
 
         a = Report.objects.create(user=user, text=self.request.data.get('text', ' '))
 
-        message = Message(token=a.text, to="+989379852503", token2="http://sessapp.moarefe98.ir/report/"+str(a.pk))
+        message = Message(token=a.text, to="+989379852503", token2="http://sessapp.moarefe98.ir/report/" + str(a.pk))
 
         operator = Operator.objects.get(name="sahar")
         operator.send_message(message)
@@ -535,3 +535,8 @@ class ReportCreateView(CreateAPIView):
         return Response({"text": "report sent", "status": 200}, headers=h)
 
 
+class PpView(ListAPIView):
+    serializer_class = PpSerializer
+    permission_classes = [IsAuthenticated]
+
+    queryset = PrivacyPolicy.objects.first()

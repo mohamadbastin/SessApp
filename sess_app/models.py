@@ -176,3 +176,8 @@ class Report(models.Model):
 
     def __str__(self):
         return str(self.user) + str(self.text[:20])
+
+
+class PrivacyPolicy(models.Model):
+    pp = models.CharField(max_length=100000)
+    tos = models.CharField(max_length=100000)
