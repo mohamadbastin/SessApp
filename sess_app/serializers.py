@@ -92,7 +92,7 @@ class ReportSerializer(serializers.ModelSerializer):
         fields = ['pk', 'user', 'text']
 
 
-class PpSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PrivacyPolicy
-        fields = ['pp', 'tos']
+# class PpSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = PrivacyPolicy
+#         fields = ['pp', 'tos']
