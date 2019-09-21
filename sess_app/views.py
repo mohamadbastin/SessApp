@@ -49,7 +49,7 @@ class SignupView(CreateAPIView):
         except:
             try:
                 user = User.objects.get(username=phone_number)
-            except User.DoesNotExist:
+            except:
                 user = User.objects.create(username=phone_number)
             profile = Profile.objects.create(user=user, phone=phone_number)
             # if department != None:
@@ -89,7 +89,7 @@ class LoginView(CreateAPIView):
             profile = Profile.objects.get(user=userr)
             user = profile.user
             # return Response({"status": "has account"})
-        except User.DoesNotExist:
+        except:
             # user = User.objects.create(username=phone_number)
             # profile = Profile.objects.create(user=user, phone=phone_number)
             # # if department != None:
